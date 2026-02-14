@@ -16,8 +16,8 @@ def calculate_budget(items: list, tax_rate: float = 0.0, budget_limit: float | N
             name = item.name
             price = item.price
         else:
-            name = item["name"]
-            price = item["price"]
+            name = item.get("name", "Unknown")
+            price = item.get("price", 0.0)
         subtotal += price
         lines.append(f"  - {name}: ${price:.2f}")
 
@@ -28,7 +28,7 @@ def calculate_budget(items: list, tax_rate: float = 0.0, budget_limit: float | N
     result += "\n".join(lines)
     result += f"\n\n  Subtotal: ${subtotal:.2f}"
     if tax_rate > 0:
-        result += f"\n  Tax ({tax_rate:.0%}): ${tax:.2f}"
+        result += f"\n  Tax ({tax_rate:.2%}): ${tax:.2f}"
     result += f"\n  Total: ${total:.2f}"
 
     if budget_limit is not None:

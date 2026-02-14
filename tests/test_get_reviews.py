@@ -14,7 +14,7 @@ def test_get_reviews_returns_formatted_string():
     mock_instance = MagicMock()
     mock_instance.invoke.return_value = mock_response
 
-    with patch("aigent.tools.get_reviews._get_tavily", return_value=mock_instance):
+    with patch("aigent.tools.get_reviews.get_tavily", return_value=mock_instance):
         result = get_reviews.invoke({"product_name": "AirPods Pro 2", "max_reviews": 2})
         assert isinstance(result, str)
         assert "AirPods" in result or "review" in result.lower()
@@ -24,6 +24,6 @@ def test_get_reviews_handles_no_results():
     mock_instance = MagicMock()
     mock_instance.invoke.return_value = {"results": []}
 
-    with patch("aigent.tools.get_reviews._get_tavily", return_value=mock_instance):
+    with patch("aigent.tools.get_reviews.get_tavily", return_value=mock_instance):
         result = get_reviews.invoke({"product_name": "nonexistent product xyz"})
         assert "no reviews" in result.lower()

@@ -6,7 +6,7 @@ readme = "README.md"
 authors = [
     { name = "Kim Yungju", email = "yjkim101002@gmail.com" }
 ]
-requires-python = ">=3.14"
+requires-python = ">=3.12"
 dependencies = [
     "langchain>=1.2.10",
     "langchain-community>=0.4.1",
@@ -16,9 +16,6 @@ dependencies = [
     "pydantic>=2.12.5",
     "python-dotenv>=1.2.1",
 ]
-
-[project.scripts]
-aigent = "aigent:main"
 
 [build-system]
 requires = ["uv_build>=0.10.2,<0.11.0"]

@@ -18,7 +18,7 @@ def test_calculate_budget_with_tax():
         "tax_rate": 0.08,
     })
     assert "108.00" in result
-    assert "8%" in result
+    assert "8.00%" in result
 
 
 def test_calculate_budget_within_budget():

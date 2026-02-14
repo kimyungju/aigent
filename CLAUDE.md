@@ -37,8 +37,12 @@ uv run pytest tests/test_middleware.py -v  # requires pytest-asyncio
 Uses `src/` layout: package is `src/aigent/`.
 
 - **`agent.py`** — Builds the LangGraph agent via `create_react_agent`. This is the central orchestration point that wires together the model, tools, middleware hooks, and checkpointer.
-- **`schemas.py`** — Pydantic models: `ProductQuery` (tool input) and `Receipt` (structured agent output via `response_format`).
-- **`tools/search_product.py`** — `@tool`-decorated function using `TavilySearch`. Module-level `_tavily` client is overridable for testing.
+- **`schemas.py`** — Pydantic models: `ProductQuery`, `PriceComparisonQuery`, `ReviewQuery`, `BudgetQuery`/`BudgetItem` (tool inputs) and `Receipt` (structured agent output via `response_format`).
+- **`tools/_client.py`** — Shared Tavily client factory (`get_tavily`), response parser (`parse_tavily_response`), and result formatter (`format_results`). All Tavily-based tools import from here.
+- **`tools/search_product.py`** — Searches for products via Tavily.
+- **`tools/compare_prices.py`** — Compares prices across retailers via Tavily.
+- **`tools/get_reviews.py`** — Fetches product reviews and ratings via Tavily.
+- **`tools/calculate_budget.py`** — Pure computation: totals, tax, budget check. No API calls.
 - **`middleware/summarization.py`** — Factory `create_summarization_hook(model, max_messages)` returns an async `pre_model_hook` that compresses history via LLM when messages exceed threshold.
 - **`middleware/human_approval.py`** — CLI `prompt_for_approval()` helper used in the execution loop when the graph hits `interrupt_before=["tools"]`.
 - **`main.py`** — Async entrypoint. Handles the invoke → check interrupt → approve → resume loop with `InMemorySaver` checkpointing.
