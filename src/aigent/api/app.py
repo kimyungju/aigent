@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from langgraph.checkpoint.memory import InMemorySaver
@@ -8,6 +9,8 @@ from aigent.api.routes import router
 
 def create_app() -> FastAPI:
     """Create and configure the FastAPI application."""
+    load_dotenv()
+
     app = FastAPI(title="aigent API")
 
     app.add_middleware(
