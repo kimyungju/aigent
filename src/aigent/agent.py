@@ -12,8 +12,17 @@ from langgraph.prebuilt import create_react_agent
 from langgraph.checkpoint.memory import InMemorySaver
 
 from aigent.schemas import Receipt
-from aigent.tools import search_product, compare_prices, get_reviews, calculate_budget
+from aigent.tools import (
+    search_product,
+    compare_prices,
+    get_reviews,
+    calculate_budget,
+    add_to_wishlist,
+    get_wishlist,
+    scrape_url,
+)
 from aigent.middleware.summarization import create_summarization_hook
+from aigent.middleware.selective_interrupt import with_approval
 
 
 def build_agent(checkpointer=None):
@@ -21,9 +30,9 @@ def build_agent(checkpointer=None):
 
     The agent:
       1. Uses gpt-4o via init_chat_model (provider-agnostic initialization)
-      2. Has a SearchProduct tool backed by Tavily
+      2. Has tools for search, price comparison, reviews, budget, wishlist, and URL scraping
       3. Summarizes conversation history after 5 messages (pre_model_hook)
-      4. Pauses for human approval before any tool execution (interrupt_before)
+      4. Selectively pauses for approval: web-calling tools require HITL, safe tools auto-execute
       5. Returns a structured Receipt as its final output (response_format)
     """
     model = init_chat_model("gpt-4o", model_provider="openai")
@@ -33,12 +42,23 @@ def build_agent(checkpointer=None):
     # Summarization hook: compresses history when messages exceed threshold
     summarization_hook = create_summarization_hook(model, max_messages=5)
 
+    # Unsafe tools (external API calls) require human approval.
+    # Safe tools (pure computation, local state) auto-execute.
+    tools = [
+        with_approval(search_product),
+        with_approval(compare_prices),
+        with_approval(get_reviews),
+        with_approval(scrape_url),
+        calculate_budget,    # safe: pure math
+        add_to_wishlist,     # safe: local state
+        get_wishlist,        # safe: local state
+    ]
+
     agent = create_react_agent(
         model=model,
-        tools=[search_product, compare_prices, get_reviews, calculate_budget],
+        tools=tools,
         checkpointer=checkpointer,
         pre_model_hook=summarization_hook,
-        interrupt_before=["tools"],  # HITL: pause before tool execution
         response_format=Receipt,
     )
 

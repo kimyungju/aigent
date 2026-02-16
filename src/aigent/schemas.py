@@ -19,14 +19,38 @@ class ReviewQuery(BaseModel):
     max_reviews: int = Field(default=3, description="Maximum number of review sources to return")
 
 
+class ProductSummary(BaseModel):
+    """One product in a multi-product comparison."""
+    product_name: str = Field(description="Name of the product")
+    price: float = Field(description="Price of the product")
+    currency: str = Field(default="USD", description="Currency code")
+    average_rating: float | None = Field(default=None, description="Average rating from reviews")
+    price_range: str | None = Field(default=None, description="Price range across retailers")
+    pros: list[str] = Field(default_factory=list, description="Key advantages of this product")
+    cons: list[str] = Field(default_factory=list, description="Key disadvantages of this product")
+
+
 class Receipt(BaseModel):
-    """Structured output schema for the agent's final response."""
+    """Structured output schema for the agent's final response.
+
+    For single-product queries, only the base fields are populated.
+    For comparison queries, ``comparison_products`` holds the full list
+    and ``comparison_summary`` provides an overall analysis.
+    """
     product_name: str = Field(description="Name of the recommended product")
     price: float = Field(description="Price of the product")
     currency: str = Field(default="USD", description="Currency code")
     average_rating: float | None = Field(default=None, description="Average rating from reviews")
     price_range: str | None = Field(default=None, description="Price range across retailers, e.g. '$49 - $79'")
     recommendation_reason: str | None = Field(default=None, description="Why this product is recommended")
+    comparison_products: list[ProductSummary] | None = Field(
+        default=None,
+        description="Other products in the comparison, if the user asked to compare multiple products",
+    )
+    comparison_summary: str | None = Field(
+        default=None,
+        description="Overall comparison analysis across all products",
+    )
 
 
 class BudgetItem(BaseModel):
