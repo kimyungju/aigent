@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { useChatStream } from "../hooks/useChatStream";
 import { ChatMessage } from "../components/ChatMessage";
 import { ChatInput } from "../components/ChatInput";
+import { ThemeToggle } from "../components/ThemeToggle";
 
 const SUGGESTIONS = [
   {
@@ -24,7 +25,7 @@ const SUGGESTIONS = [
 ];
 
 export default function Home() {
-  const { messages, status, sessionId, sendMessage, approveToolCall } =
+  const { messages, status, sendMessage, approveToolCall, clearSession } =
     useChatStream();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -76,14 +77,25 @@ export default function Home() {
             </p>
           </div>
         </div>
-        {sessionId && (
-          <span
-            className="text-[10px] font-mono"
-            style={{ color: "var(--text-inverse-muted)" }}
-          >
-            {sessionId.slice(0, 8)}
-          </span>
-        )}
+        <div className="flex items-center gap-2">
+          {messages.length > 0 && (
+            <button
+              onClick={clearSession}
+              className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-[11px] font-medium transition-all duration-150 hover:scale-[1.02] active:scale-[0.98]"
+              style={{
+                background: "rgba(255,255,255,0.1)",
+                color: "var(--text-inverse-muted)",
+                border: "1px solid rgba(255,255,255,0.1)",
+              }}
+            >
+              <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+              </svg>
+              New chat
+            </button>
+          )}
+          <ThemeToggle />
+        </div>
       </header>
 
       {/* Messages */}
@@ -182,7 +194,7 @@ export default function Home() {
         className="relative"
         style={{
           borderTop: "1px solid var(--border)",
-          background: "rgba(247, 244, 240, 0.8)",
+          background: "var(--bg-primary)",
           backdropFilter: "blur(12px)",
           WebkitBackdropFilter: "blur(12px)",
         }}

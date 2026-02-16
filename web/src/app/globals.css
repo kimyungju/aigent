@@ -28,6 +28,37 @@
   --shadow-accent: 0 4px 16px rgba(184, 110, 47, 0.12);
 }
 
+[data-theme="dark"] {
+  --bg-primary: #1a1816;
+  --bg-secondary: #242120;
+  --bg-elevated: #2c2926;
+  --bg-chat: #2c2926;
+  --bg-sidebar: #141210;
+  --text-primary: #e8e2da;
+  --text-secondary: #a39e98;
+  --text-muted: #6b6560;
+  --text-inverse: #1a1816;
+  --text-inverse-muted: #6b6560;
+  --accent: #d4944a;
+  --accent-soft: #3d2e1e;
+  --accent-softer: #2e2318;
+  --accent-glow: rgba(212, 148, 74, 0.2);
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --user-bg: #d4944a;
+  --user-text: #1a1816;
+  --border: #3a3532;
+  --border-light: #2e2b28;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-accent: 0 4px 16px rgba(212, 148, 74, 0.15);
+}
+
+[data-theme="dark"] body::before {
+  opacity: 0.05;
+}
+
 @theme inline {
   --font-display: 'Playfair Display', Georgia, serif;
   --font-body: 'DM Sans', system-ui, sans-serif;
