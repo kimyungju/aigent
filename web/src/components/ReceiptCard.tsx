@@ -1,6 +1,8 @@
 "use client";
 
 import type { Receipt } from "../types";
+import { ExportButton } from "./ExportButton";
+import { ComparisonTable } from "./ComparisonTable";
 
 interface Props {
   receipt: Receipt;
@@ -56,6 +58,22 @@ function StarRating({ rating }: { rating: number }) {
 }
 
 export function ReceiptCard({ receipt }: Props) {
+  // If comparison data exists, render the comparison table instead
+  if (receipt.comparison_products?.length) {
+    return (
+      <div>
+        <ComparisonTable
+          products={receipt.comparison_products}
+          recommendedName={receipt.product_name}
+          summary={receipt.comparison_summary}
+        />
+        <div className="mt-2 flex justify-end">
+          <ExportButton receipt={receipt} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div
       className="overflow-hidden rounded-xl"
@@ -176,6 +194,11 @@ export function ReceiptCard({ receipt }: Props) {
             </p>
           </div>
         )}
+
+        {/* Export */}
+        <div className="mt-4 flex justify-end">
+          <ExportButton receipt={receipt} />
+        </div>
       </div>
     </div>
   );

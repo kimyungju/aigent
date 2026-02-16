@@ -3,6 +3,17 @@ export type MessageRole = "user" | "assistant";
 export interface ToolCall {
   name: string;
   args: Record<string, unknown>;
+  result?: string;
+}
+
+export interface ProductSummary {
+  product_name: string;
+  price: number;
+  currency: string;
+  average_rating?: number | null;
+  price_range?: string | null;
+  pros?: string[];
+  cons?: string[];
 }
 
 export interface Receipt {
@@ -12,6 +23,8 @@ export interface Receipt {
   average_rating?: number | null;
   price_range?: string | null;
   recommendation_reason?: string | null;
+  comparison_products?: ProductSummary[] | null;
+  comparison_summary?: string | null;
 }
 
 export interface ChatMessage {
