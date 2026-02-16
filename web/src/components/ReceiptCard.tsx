@@ -14,25 +14,38 @@ function StarRating({ rating }: { rating: number }) {
   for (let i = 0; i < 5; i++) {
     if (i < full) {
       stars.push(
-        <svg key={i} className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="var(--accent)">
+        <svg
+          key={i}
+          className="h-4 w-4"
+          viewBox="0 0 20 20"
+          fill="var(--accent)"
+        >
           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
         </svg>
       );
     } else if (i === full && hasHalf) {
       stars.push(
-        <svg key={i} className="h-3.5 w-3.5" viewBox="0 0 20 20">
+        <svg key={i} className="h-4 w-4" viewBox="0 0 20 20">
           <defs>
             <linearGradient id={`half-${i}`}>
               <stop offset="50%" stopColor="var(--accent)" />
               <stop offset="50%" stopColor="#e8e2da" />
             </linearGradient>
           </defs>
-          <path fill={`url(#half-${i})`} d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+          <path
+            fill={`url(#half-${i})`}
+            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+          />
         </svg>
       );
     } else {
       stars.push(
-        <svg key={i} className="h-3.5 w-3.5" viewBox="0 0 20 20" fill="#e8e2da">
+        <svg
+          key={i}
+          className="h-4 w-4"
+          viewBox="0 0 20 20"
+          fill="#e8e2da"
+        >
           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
         </svg>
       );
@@ -46,68 +59,121 @@ export function ReceiptCard({ receipt }: Props) {
   return (
     <div
       className="overflow-hidden rounded-xl"
-      style={{ border: '1px solid var(--border)', background: 'var(--bg-chat)', boxShadow: 'var(--shadow-md)' }}
+      style={{
+        border: "1px solid var(--border)",
+        background: "var(--bg-chat)",
+        boxShadow: "var(--shadow-md)",
+      }}
     >
-      {/* Header accent bar */}
-      <div className="h-1" style={{ background: 'linear-gradient(90deg, var(--accent), #e8a76e)' }} />
+      {/* Animated gradient bar */}
+      <div className="gradient-sweep h-[1.5px]" />
 
-      <div className="p-4">
+      <div className="p-5">
+        {/* Label */}
+        <span
+          className="text-[10px] font-semibold uppercase tracking-[0.15em]"
+          style={{ color: "var(--accent)" }}
+        >
+          Product Recommendation
+        </span>
+
         {/* Product name */}
         <h3
-          className="text-base font-semibold tracking-tight"
-          style={{ fontFamily: "'DM Serif Display', Georgia, serif", color: 'var(--text-primary)' }}
+          className="mt-1.5 text-xl font-semibold tracking-tight"
+          style={{
+            fontFamily: "'Playfair Display', Georgia, serif",
+            color: "var(--text-primary)",
+          }}
         >
           {receipt.product_name}
         </h3>
 
         {/* Rating */}
         {receipt.average_rating != null && (
-          <div className="mt-1.5 flex items-center gap-2">
+          <div className="mt-2 flex items-center gap-2">
             <StarRating rating={receipt.average_rating} />
-            <span className="text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>
-              {receipt.average_rating}
+            <span
+              className="text-sm font-medium"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              {receipt.average_rating.toFixed(1)} / 5.0
             </span>
           </div>
         )}
 
-        {/* Divider */}
-        <div className="my-3" style={{ borderTop: '1px solid var(--border-light)' }} />
-
-        {/* Price section */}
-        <div className="flex items-baseline justify-between">
-          <span className="text-xs uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-            Price
-          </span>
-          <span
-            className="text-xl font-bold tabular-nums"
-            style={{ color: 'var(--accent)' }}
-          >
-            ${receipt.price.toFixed(2)}
-            <span className="ml-1 text-xs font-normal" style={{ color: 'var(--text-muted)' }}>
-              {receipt.currency}
-            </span>
-          </span>
+        {/* Editorial ornament divider */}
+        <div className="relative my-4">
+          <div
+            className="h-px w-full"
+            style={{ background: "var(--border-light)" }}
+          />
+          <div
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-1.5 w-1.5 rounded-full"
+            style={{ background: "var(--accent)" }}
+          />
         </div>
 
-        {/* Price range */}
-        {receipt.price_range && (
-          <div className="mt-2 flex items-baseline justify-between">
-            <span className="text-xs uppercase tracking-wider" style={{ color: 'var(--text-muted)' }}>
-              Range
+        {/* Price section */}
+        <div className="flex items-end justify-between">
+          <div>
+            <span
+              className="text-[10px] font-semibold uppercase tracking-[0.1em]"
+              style={{ color: "var(--text-muted)" }}
+            >
+              Best Price
             </span>
-            <span className="text-sm font-medium" style={{ color: 'var(--text-secondary)' }}>
+            <div
+              className="mt-0.5 text-3xl font-bold tabular-nums"
+              style={{
+                fontFamily: "'Playfair Display', Georgia, serif",
+                color: "var(--accent)",
+              }}
+            >
+              ${receipt.price.toFixed(2)}
+              <span
+                className="ml-1.5 text-sm font-normal"
+                style={{ color: "var(--text-muted)" }}
+              >
+                {receipt.currency}
+              </span>
+            </div>
+          </div>
+
+          {/* Price range pill */}
+          {receipt.price_range && (
+            <span
+              className="rounded-full px-3 py-1 text-xs font-medium"
+              style={{
+                background: "var(--accent-softer)",
+                color: "var(--accent)",
+              }}
+            >
               {receipt.price_range}
             </span>
-          </div>
-        )}
+          )}
+        </div>
 
-        {/* Recommendation */}
+        {/* Recommendation - editor's note style */}
         {receipt.recommendation_reason && (
           <div
-            className="mt-3 rounded-lg p-3 text-xs leading-relaxed"
-            style={{ background: 'var(--accent-soft)', color: 'var(--text-secondary)' }}
+            className="mt-4 rounded-lg p-4"
+            style={{
+              background: "var(--accent-softer)",
+              borderLeft: "3px solid var(--accent)",
+            }}
           >
-            {receipt.recommendation_reason}
+            <span
+              className="text-[10px] font-semibold uppercase tracking-[0.1em]"
+              style={{ color: "var(--accent)" }}
+            >
+              Our Take
+            </span>
+            <p
+              className="mt-1 text-sm italic leading-relaxed"
+              style={{ color: "var(--text-secondary)" }}
+            >
+              {receipt.recommendation_reason}
+            </p>
           </div>
         )}
       </div>

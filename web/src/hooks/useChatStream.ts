@@ -261,5 +261,5 @@ export function useChatStream() {
     [sessionId]
   );
 
-  return { messages, status, sendMessage, approveToolCall };
+  return { messages, status, sessionId, sendMessage, approveToolCall };
 }

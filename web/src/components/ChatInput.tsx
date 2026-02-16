@@ -9,6 +9,7 @@ interface Props {
 
 export function ChatInput({ onSend, disabled }: Props) {
   const [input, setInput] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
@@ -18,44 +19,63 @@ export function ChatInput({ onSend, disabled }: Props) {
     setInput("");
   };
 
+  const hasText = input.trim().length > 0;
+
   return (
-    <form onSubmit={handleSubmit} className="flex items-center gap-3">
+    <form onSubmit={handleSubmit}>
       <div
-        className="relative flex-1"
+        className="flex items-center rounded-2xl px-4 py-2 transition-all duration-200"
+        style={{
+          background: "var(--bg-elevated)",
+          border: "1px solid",
+          borderColor: isFocused ? "var(--accent)" : "var(--border)",
+          boxShadow: isFocused
+            ? "0 0 0 3px var(--accent-glow)"
+            : "var(--shadow-sm)",
+        }}
       >
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           placeholder="Search for a product..."
           disabled={disabled}
-          className="w-full rounded-xl px-4 py-3 text-sm transition-all duration-200 focus:outline-none disabled:opacity-40"
-          style={{
-            background: 'var(--bg-chat)',
-            color: 'var(--text-primary)',
-            border: '1px solid var(--border)',
-            boxShadow: 'var(--shadow-sm)',
-          }}
-          onFocus={(e) => {
-            e.currentTarget.style.borderColor = 'var(--accent)';
-            e.currentTarget.style.boxShadow = '0 0 0 3px var(--accent-soft)';
-          }}
-          onBlur={(e) => {
-            e.currentTarget.style.borderColor = 'var(--border)';
-            e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
-          }}
+          className="flex-1 bg-transparent py-1.5 text-sm focus:outline-none disabled:opacity-40"
+          style={{ color: "var(--text-primary)" }}
         />
+        <button
+          type="submit"
+          disabled={disabled || !hasText}
+          className="ml-2 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white transition-all duration-150 hover:scale-[1.04] active:scale-[0.96] disabled:opacity-30 disabled:hover:scale-100"
+          style={{
+            background: hasText ? "var(--accent)" : "var(--border)",
+          }}
+        >
+          <svg
+            className="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2.5}
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18"
+            />
+          </svg>
+        </button>
       </div>
-      <button
-        type="submit"
-        disabled={disabled || !input.trim()}
-        className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-white transition-all duration-150 hover:scale-[1.04] active:scale-[0.96] disabled:opacity-30 disabled:hover:scale-100"
-        style={{ background: 'var(--accent)' }}
-      >
-        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 10.5L12 3m0 0l7.5 7.5M12 3v18" />
-        </svg>
-      </button>
+      {isFocused && !hasText && (
+        <p
+          className="mt-1.5 text-center text-[11px] animate-fade-in"
+          style={{ color: "var(--text-muted)" }}
+        >
+          Press Enter to send
+        </p>
+      )}
     </form>
   );
 }
