@@ -1,5 +1,7 @@
 # Pricewise
 
+> **Live Demo:** [pricewise-ai-shop.vercel.app](https://pricewise-ai-shop.vercel.app)
+
 An AI-powered shopping assistant that searches for products, compares prices across retailers, analyzes reviews, and calculates totals — all through a conversational interface with human-in-the-loop approval.
 
 ## Features
@@ -29,21 +31,28 @@ An AI-powered shopping assistant that searches for products, compares prices acr
                                            └──────────┘    └──────────┘    └────────────┘
 ```
 
-The agent is built with LangGraph's `create_react_agent` and orchestrates four tools:
+The agent is built with LangGraph's `create_react_agent` and orchestrates ten tools:
 
-| Tool | Description |
-|------|-------------|
-| `search_product` | Searches for products via Tavily web search |
-| `compare_prices` | Compares prices across multiple retailers |
-| `get_reviews` | Fetches product reviews and ratings |
-| `calculate_budget` | Computes totals with tax and validates against budget |
+| Tool | Description | Approval |
+|------|-------------|----------|
+| `search_product` | Searches for products via Tavily web search | Required |
+| `compare_prices` | Compares prices across multiple retailers | Required |
+| `get_reviews` | Fetches product reviews and ratings | Required |
+| `scrape_url` | Extracts content from a specific product URL | Required |
+| `find_coupons` | Searches for coupons and deals | Required |
+| `check_availability` | Checks stock availability across retailers | Required |
+| `delegate_research` | Fans out parallel searches across product categories | Required |
+| `calculate_budget` | Computes totals with tax and validates against budget | Auto |
+| `add_to_wishlist` | Saves a product to the session wishlist | Auto |
+| `get_wishlist` | Retrieves the current wishlist | Auto |
 
-A **pre-model summarization hook** compresses conversation history when it exceeds a configurable threshold, and **human-in-the-loop interrupts** pause execution before each tool call for user approval.
+A **pre-model summarization hook** compresses conversation history when it exceeds a configurable threshold. Tools making external API calls require **human-in-the-loop approval**; pure-computation tools auto-execute.
 
 ## Tech Stack
 
-**Backend:** Python 3.12+, LangGraph, LangChain, OpenAI (gpt-4o), Tavily, Pydantic v2, FastAPI, SSE
-**Frontend:** Next.js, TypeScript, React
+**Backend:** Python 3.12+, LangGraph, LangChain, OpenAI (gpt-4o), Tavily, Pydantic v2, FastAPI, SSE, PostgreSQL
+**Frontend:** Next.js 16, TypeScript, React 19, Tailwind CSS
+**Infrastructure:** Railway (backend + Postgres), Vercel (frontend), Docker
 **Tooling:** uv (package manager), pytest
 
 ## Setup
@@ -98,7 +107,7 @@ Start both servers in separate terminals:
 
 ```bash
 # Terminal 1 — Backend
-uv run uvicorn aigent.api.app:create_app --factory --reload --port 8000
+uv run uvicorn pricewise.api.app:create_app --factory --reload --port 8000
 
 # Terminal 2 — Frontend
 cd web && npm run dev
@@ -119,3 +128,12 @@ The CLI runs a demo query and prompts for tool approval at each step.
 ```bash
 uv run pytest -v
 ```
+
+## Deployment
+
+| Service | Platform | URL |
+|---------|----------|-----|
+| Frontend | Vercel | [pricewise-ai-shop.vercel.app](https://pricewise-ai-shop.vercel.app) |
+| Backend | Railway | `pricewise-production-5bc0.up.railway.app` |
+
+The frontend calls the backend directly via `NEXT_PUBLIC_API_URL`. In local dev, Next.js rewrites proxy `/api/*` to `localhost:8000`. CORS origins are configured per environment via `ALLOWED_ORIGINS` on Railway.
