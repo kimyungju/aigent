@@ -11,6 +11,7 @@ import asyncio
 import os
 
 from dotenv import load_dotenv
+from langgraph.types import Command
 
 from aigent.agent import build_agent
 from aigent.middleware.human_approval import prompt_for_approval
@@ -36,8 +37,8 @@ async def main():
     user_query = "Find me wireless headphones under $100, compare prices, check reviews, and calculate total with 8% tax"
     print(f"\nUser: {user_query}\n")
 
-    # First invocation: the agent reasons and decides to call SearchProduct.
-    # Because interrupt_before=["tools"], execution pauses before the tool runs.
+    # First invocation: the agent reasons and decides to call a tool.
+    # Per-tool interrupt() calls pause execution before wrapped tools run.
     result = await agent.ainvoke(
         {"messages": [("user", user_query)]},
         config=config,
@@ -47,18 +48,22 @@ async def main():
     state = await agent.aget_state(config)
 
     while state.next:
-        # The agent wants to call a tool — show it and ask for approval
-        last_msg = state.values["messages"][-1]
+        # Read interrupt data from state.tasks (per-tool interrupt() pattern)
+        tool_calls = []
+        for task in state.tasks:
+            if hasattr(task, "interrupts") and task.interrupts:
+                for intr in task.interrupts:
+                    if isinstance(intr.value, dict) and "tool" in intr.value:
+                        tool_calls.append(intr.value)
 
-        if hasattr(last_msg, "tool_calls") and last_msg.tool_calls:
-            approved = prompt_for_approval(last_msg.tool_calls)
+        if tool_calls:
+            approved = prompt_for_approval(tool_calls)
+        else:
+            # No interrupt data found — auto-approve to avoid getting stuck
+            approved = True
 
-            if not approved:
-                print("\nTool execution denied. Ending session.")
-                return
-
-        # Resume: passing None continues from the checkpoint
-        result = await agent.ainvoke(None, config=config)
+        # Resume with Command(resume=...) so interrupt() receives the value
+        result = await agent.ainvoke(Command(resume=approved), config=config)
         state = await agent.aget_state(config)
 
     # Extract the structured Receipt output
