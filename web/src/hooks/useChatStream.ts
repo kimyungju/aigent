@@ -3,7 +3,9 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import type { ChatMessage, ChatStatus, ToolCall, Receipt } from "../types";
 
-const API_BASE = "/api/chat";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL
+  ? `${process.env.NEXT_PUBLIC_API_URL}/chat`
+  : "/api/chat";
 const STORAGE_KEY = "pricewise_session_id";
 
 function generateId(): string {

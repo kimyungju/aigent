@@ -10,6 +10,12 @@ from pricewise.tools.wishlist import session_id_var
 
 router = APIRouter()
 
+SSE_HEADERS = {
+    "Cache-Control": "no-cache",
+    "Connection": "keep-alive",
+    "X-Accel-Buffering": "no",
+}
+
 
 class MessageRequest(BaseModel):
     content: str
@@ -177,6 +183,7 @@ async def send_message(session_id: str, body: MessageRequest, request: Request):
             session_id=session_id,
         ),
         media_type="text/event-stream",
+        headers=SSE_HEADERS,
     )
 
 
@@ -208,4 +215,5 @@ async def approve_tool(session_id: str, body: ApprovalRequest, request: Request)
             session_id=session_id,
         ),
         media_type="text/event-stream",
+        headers=SSE_HEADERS,
     )
