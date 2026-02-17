@@ -19,6 +19,30 @@ class ReviewQuery(BaseModel):
     max_reviews: int = Field(default=3, description="Maximum number of review sources to return")
 
 
+class CouponQuery(BaseModel):
+    """Input schema for the find_coupons tool."""
+    product_or_retailer: str = Field(description="Product name or retailer to find coupons for")
+    max_results: int = Field(default=5, description="Maximum number of coupon sources to return")
+
+
+class AvailabilityQuery(BaseModel):
+    """Input schema for the check_availability tool."""
+    product_name: str = Field(description="Name of the product to check availability for")
+    max_sources: int = Field(default=5, description="Maximum number of retailer sources to check")
+
+
+class ProductResearchItem(BaseModel):
+    """A single product to research in a multi-product delegation."""
+    product_name: str = Field(description="Product name or category to research")
+    budget: float | None = Field(default=None, description="Budget constraint for this item")
+
+
+class DelegationQuery(BaseModel):
+    """Input schema for the delegate_research tool."""
+    products: list[ProductResearchItem] = Field(description="List of products to research in parallel")
+    total_budget: float | None = Field(default=None, description="Overall budget constraint across all products")
+
+
 class ProductSummary(BaseModel):
     """One product in a multi-product comparison."""
     product_name: str = Field(description="Name of the product")

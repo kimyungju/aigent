@@ -20,6 +20,9 @@ from pricewise.tools import (
     add_to_wishlist,
     get_wishlist,
     scrape_url,
+    find_coupons,
+    check_availability,
+    delegate_research,
 )
 from pricewise.middleware.summarization import create_summarization_hook
 from pricewise.middleware.selective_interrupt import with_approval
@@ -49,6 +52,9 @@ def build_agent(checkpointer=None):
         with_approval(compare_prices),
         with_approval(get_reviews),
         with_approval(scrape_url),
+        with_approval(find_coupons),
+        with_approval(check_availability),
+        with_approval(delegate_research),
         calculate_budget,    # safe: pure math
         add_to_wishlist,     # safe: local state
         get_wishlist,        # safe: local state

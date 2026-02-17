@@ -4,6 +4,9 @@ from pricewise.tools.get_reviews import get_reviews
 from pricewise.tools.calculate_budget import calculate_budget
 from pricewise.tools.wishlist import add_to_wishlist, get_wishlist
 from pricewise.tools.scrape_url import scrape_url
+from pricewise.tools.find_coupons import find_coupons
+from pricewise.tools.check_availability import check_availability
+from pricewise.tools.delegate_research import delegate_research
 
 __all__ = [
     "search_product",
@@ -13,4 +16,7 @@ __all__ = [
     "add_to_wishlist",
     "get_wishlist",
     "scrape_url",
+    "find_coupons",
+    "check_availability",
+    "delegate_research",
 ]
