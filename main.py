@@ -49,21 +49,30 @@ async def main():
 
     while state.next:
         # Read interrupt data from state.tasks (per-tool interrupt() pattern)
-        tool_calls = []
+        interrupts = []
         for task in state.tasks:
             if hasattr(task, "interrupts") and task.interrupts:
                 for intr in task.interrupts:
                     if isinstance(intr.value, dict) and "tool" in intr.value:
-                        tool_calls.append(intr.value)
+                        interrupts.append(intr)
 
-        if tool_calls:
+        if interrupts:
+            tool_calls = [
+                {"name": intr.value["tool"], "args": intr.value.get("args", {})}
+                for intr in interrupts
+            ]
             approved = prompt_for_approval(tool_calls)
         else:
-            # No interrupt data found — auto-approve to avoid getting stuck
             approved = True
 
-        # Resume with Command(resume=...) so interrupt() receives the value
-        result = await agent.ainvoke(Command(resume=approved), config=config)
+        # Resume with Command(resume=...) so interrupt() receives the value.
+        # Multiple interrupts require a dict mapping interrupt id → value.
+        if len(interrupts) > 1:
+            resume_value = {intr.id: approved for intr in interrupts}
+        else:
+            resume_value = approved
+
+        result = await agent.ainvoke(Command(resume=resume_value), config=config)
         state = await agent.aget_state(config)
 
     # Extract the structured Receipt output
