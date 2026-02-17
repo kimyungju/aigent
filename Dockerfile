@@ -2,6 +2,8 @@ FROM python:3.12-slim
 
 RUN pip install uv
 
+ENV UV_PYTHON_PREFERENCE=only-system
+
 WORKDIR /app
 
 COPY pyproject.toml uv.lock ./
