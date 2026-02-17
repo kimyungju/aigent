@@ -4,7 +4,7 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import type { ChatMessage, ChatStatus, ToolCall, Receipt } from "../types";
 
 const API_BASE = "/api/chat";
-const STORAGE_KEY = "aigent_session_id";
+const STORAGE_KEY = "pricewise_session_id";
 
 function generateId(): string {
   return Math.random().toString(36).substring(2, 10);

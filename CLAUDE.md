@@ -34,7 +34,7 @@ uv run pytest tests/test_middleware.py -v  # requires pytest-asyncio
 
 ## Architecture
 
-Uses `src/` layout: package is `src/aigent/`.
+Uses `src/` layout: package is `src/pricewise/`.
 
 - **`agent.py`** — Builds the LangGraph agent via `create_react_agent`. This is the central orchestration point that wires together the model, tools, middleware hooks, and checkpointer.
 - **`schemas.py`** — Pydantic models: `ProductQuery`, `PriceComparisonQuery`, `ReviewQuery`, `BudgetQuery`/`BudgetItem` (tool inputs) and `Receipt` (structured agent output via `response_format`).

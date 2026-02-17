@@ -1,4 +1,4 @@
-from aigent.schemas import ProductQuery, Receipt
+from pricewise.schemas import ProductQuery, Receipt
 
 
 def test_product_query_defaults():

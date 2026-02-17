@@ -3,7 +3,7 @@ import pytest_asyncio
 import os
 from unittest.mock import patch
 from httpx import AsyncClient, ASGITransport
-from aigent.api.app import create_app
+from pricewise.api.app import create_app
 
 
 @pytest.fixture

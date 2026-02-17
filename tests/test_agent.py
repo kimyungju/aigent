@@ -1,7 +1,7 @@
 import os
 from unittest.mock import patch
 from langgraph.checkpoint.memory import InMemorySaver
-from aigent.agent import build_agent
+from pricewise.agent import build_agent
 
 
 @patch.dict(os.environ, {"OPENAI_API_KEY": "sk-test", "TAVILY_API_KEY": "tvly-test"})

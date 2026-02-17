@@ -5,8 +5,8 @@ from langgraph.types import Command
 from pydantic import BaseModel
 from langchain_core.messages import AIMessageChunk, HumanMessage, AIMessage, ToolMessage
 
-from aigent.api.streaming import format_sse_event
-from aigent.tools.wishlist import session_id_var
+from pricewise.api.streaming import format_sse_event
+from pricewise.tools.wishlist import session_id_var
 
 router = APIRouter()
 

@@ -13,7 +13,7 @@ function getSystemTheme(): Theme {
 
 function getStoredTheme(): Theme | null {
   if (typeof window === "undefined") return null;
-  return localStorage.getItem("aigent_theme") as Theme | null;
+  return localStorage.getItem("pricewise_theme") as Theme | null;
 }
 
 export function useTheme() {
@@ -39,7 +39,7 @@ export function useTheme() {
 
   const setTheme = useCallback((t: Theme) => {
     setThemeState(t);
-    localStorage.setItem("aigent_theme", t);
+    localStorage.setItem("pricewise_theme", t);
     document.documentElement.setAttribute("data-theme", t);
   }, []);
 

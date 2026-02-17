@@ -1,6 +1,6 @@
 from langchain_core.tools import tool
-from aigent.schemas import ReviewQuery
-from aigent.tools._client import get_tavily, parse_tavily_response, format_results
+from pricewise.schemas import ReviewQuery
+from pricewise.tools._client import get_tavily, parse_tavily_response, format_results
 
 
 @tool(args_schema=ReviewQuery)

@@ -1,5 +1,5 @@
 from langchain_core.tools import tool
-from aigent.schemas import BudgetQuery
+from pricewise.schemas import BudgetQuery
 
 
 @tool(args_schema=BudgetQuery)

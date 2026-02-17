@@ -60,7 +60,7 @@ export default function Home() {
               fontFamily: "'Playfair Display', Georgia, serif",
             }}
           >
-            a.
+            P.
           </div>
           <div className="text-left">
             <h1
@@ -70,7 +70,7 @@ export default function Home() {
                 color: "var(--text-inverse)",
               }}
             >
-              aigent
+              Pricewise
             </h1>
             <p
               className="text-[10px] font-medium uppercase tracking-[0.2em]"

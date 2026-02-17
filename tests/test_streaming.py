@@ -1,4 +1,4 @@
-from aigent.api.streaming import format_sse_event
+from pricewise.api.streaming import format_sse_event
 
 
 def test_format_token_event():

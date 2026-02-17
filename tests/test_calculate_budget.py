@@ -1,4 +1,4 @@
-from aigent.tools.calculate_budget import calculate_budget
+from pricewise.tools.calculate_budget import calculate_budget
 
 
 def test_calculate_budget_basic():

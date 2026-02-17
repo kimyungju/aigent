@@ -11,8 +11,8 @@ from langchain.chat_models import init_chat_model
 from langgraph.prebuilt import create_react_agent
 from langgraph.checkpoint.memory import InMemorySaver
 
-from aigent.schemas import Receipt
-from aigent.tools import (
+from pricewise.schemas import Receipt
+from pricewise.tools import (
     search_product,
     compare_prices,
     get_reviews,
@@ -21,8 +21,8 @@ from aigent.tools import (
     get_wishlist,
     scrape_url,
 )
-from aigent.middleware.summarization import create_summarization_hook
-from aigent.middleware.selective_interrupt import with_approval
+from pricewise.middleware.summarization import create_summarization_hook
+from pricewise.middleware.selective_interrupt import with_approval
 
 
 def build_agent(checkpointer=None):

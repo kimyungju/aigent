@@ -1,7 +1,7 @@
 import pytest
 from unittest.mock import AsyncMock, MagicMock
 from langchain_core.messages import HumanMessage, AIMessage, SystemMessage
-from aigent.middleware.summarization import create_summarization_hook
+from pricewise.middleware.summarization import create_summarization_hook
 
 
 @pytest.mark.asyncio

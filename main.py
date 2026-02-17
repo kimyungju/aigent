@@ -13,8 +13,8 @@ import os
 from dotenv import load_dotenv
 from langgraph.types import Command
 
-from aigent.agent import build_agent
-from aigent.middleware.human_approval import prompt_for_approval
+from pricewise.agent import build_agent
+from pricewise.middleware.human_approval import prompt_for_approval
 
 
 async def main():
