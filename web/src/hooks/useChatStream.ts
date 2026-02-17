@@ -162,12 +162,12 @@ export function useChatStream() {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) return;
 
-    const controller = new AbortController();
     setSessionId(stored);
-    fetch(`${API_BASE}/sessions/${stored}/messages`, { signal: controller.signal })
+    fetch(`${API_BASE}/sessions/${stored}/messages`)
       .then((res) => {
         if (res.ok) return res.json();
         localStorage.removeItem(STORAGE_KEY);
+        setSessionId(null);
         return null;
       })
       .then((data) => {
@@ -191,16 +191,15 @@ export function useChatStream() {
           setMessages(hydrated);
         }
       })
-      .catch((err) => {
-        if (err.name === "AbortError") return;
+      .catch(() => {
         localStorage.removeItem(STORAGE_KEY);
+        setSessionId(null);
       });
-
-    return () => controller.abort();
   }, []);
 
   const createSession = useCallback(async (signal?: AbortSignal) => {
     const resp = await fetch(`${API_BASE}/sessions`, { method: "POST", signal });
+    if (!resp.ok) throw new Error("Failed to create session");
     const data = await resp.json();
     setSessionId(data.session_id);
     localStorage.setItem(STORAGE_KEY, data.session_id);
@@ -247,13 +246,21 @@ export function useChatStream() {
           signal: controller.signal,
         });
 
-        await readSSEStream(
-          response,
-          createSSEHandlers(assistantId, setMessages, setStatus),
-          controller.signal
-        );
+        const handlers = createSSEHandlers(assistantId, setMessages, setStatus);
+
+        if (!response.ok) {
+          const errBody = await response.json().catch(() => ({ detail: "Request failed" }));
+          handlers.onError(errBody.detail || `HTTP ${response.status}`);
+          return;
+        }
+
+        await readSSEStream(response, handlers, controller.signal);
       } catch (err) {
-        if (err instanceof Error && err.name === "AbortError") return;
+        if (err instanceof Error && err.name === "AbortError") {
+          setStatus("idle");
+          return;
+        }
+        setStatus("error");
         throw err;
       }
     },
@@ -296,13 +303,21 @@ export function useChatStream() {
           }
         );
 
-        await readSSEStream(
-          response,
-          createSSEHandlers(assistantId, setMessages, setStatus),
-          controller.signal
-        );
+        const handlers = createSSEHandlers(assistantId, setMessages, setStatus);
+
+        if (!response.ok) {
+          const errBody = await response.json().catch(() => ({ detail: "Request failed" }));
+          handlers.onError(errBody.detail || `HTTP ${response.status}`);
+          return;
+        }
+
+        await readSSEStream(response, handlers, controller.signal);
       } catch (err) {
-        if (err instanceof Error && err.name === "AbortError") return;
+        if (err instanceof Error && err.name === "AbortError") {
+          setStatus("idle");
+          return;
+        }
+        setStatus("error");
         throw err;
       }
     },
